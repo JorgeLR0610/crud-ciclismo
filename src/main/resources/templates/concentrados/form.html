@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formulario de Concentrado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="mt-3" th:text="${concentrado.idConcentrado == 0} ? 'Crear Concentrado' : 'Editar Concentrado'">
+                Formulario de Concentrado
+            </h1>
+
+            <form th:action="${concentrado.idConcentrado == 0} ? @{/concentrados/guardar} : @{/concentrados/{id}(id=${concentrado.idConcentrado})}" 
+                  th:object="${concentrado}" 
+                  method="post">
+                
+                <input type="hidden" name="_method" value="PUT" th:if="${concentrado.idConcentrado != 0}" />
+                <input type="hidden" th:field="*{idConcentrado}" />
+                
+                <div class="mb-3">
+                    <label for="dorsal" class="form-label">Ciclista:</label>
+                    <select name="dorsal" class="form-select" required>
+                        <option value="">Seleccione un ciclista</option>
+                        <option th:each="ciclista : ${ciclistas}" 
+                                th:value="${ciclista.dorsal}" 
+                                th:text="${ciclista.nombre + ' ' + ciclista.ap + ' ' + ciclista.am + ' (Dorsal: ' + ciclista.dorsal + ')'}"
+                                th:selected="${concentrado.dorsal != null && concentrado.dorsal.dorsal == ciclista.dorsal}">
+                            Ciclista
+                        </option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="noEtapa" class="form-label">Etapa:</label>
+                    <select name="noEtapa" class="form-select" required>
+                        <option value="">Seleccione una etapa</option>
+                        <option th:each="etapa : ${etapas}" 
+                                th:value="${etapa.noEtapa}" 
+                                th:text="${'Etapa ' + etapa.noEtapa + ' - ' + etapa.salida + ' a ' + etapa.llegada}"
+                                th:selected="${concentrado.noEtapa != null && concentrado.noEtapa.noEtapa == etapa.noEtapa}">
+                            Etapa
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="codigo" class="form-label">Maillot:</label>
+                    <select name="codigo" class="form-select" required>
+                        <option value="">Seleccione un maillot</option>
+                        <option th:each="maillot : ${maillots}" 
+                                th:value="${maillot.codigo}" 
+                                th:text="${maillot.tipo + ' (' + maillot.color + ')'}"
+                                th:selected="${concentrado.codigo != null && concentrado.codigo.codigo == maillot.codigo}">
+                            Maillot
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="idPuerto" class="form-label">Puerto:</label>
+                    <select name="idPuerto" class="form-select" required>
+                        <option value="">Seleccione un puerto</option>
+                        <option th:each="puerto : ${puertos}" 
+                                th:value="${puerto.idPuerto}" 
+                                th:text="${puerto.nombrePuerto + ' (Altura: ' + puerto.altura + 'm, Cat: ' + puerto.categoria + ')'}"
+                                th:selected="${concentrado.idPuerto != null && concentrado.idPuerto.idPuerto == puerto.idPuerto}">
+                            Puerto
+                        </option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <span th:text="${concentrado.idConcentrado == 0} ? 'Guardar' : 'Actualizar'">Guardar</span>
+                </button>
+                <a th:href="@{/concentrados}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
