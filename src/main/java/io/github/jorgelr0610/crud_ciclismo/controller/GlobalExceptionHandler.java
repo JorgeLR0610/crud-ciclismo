@@ -5,6 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
     
@@ -41,6 +44,25 @@ public class GlobalExceptionHandler {
             mensajeUsuario = "Todos los campos obligatorios deben ser completados; por favor verifica el formulario.";
                          }
 
+
+        model.addAttribute("titulo", titulo);
+        model.addAttribute("mensaje", mensajeUsuario);
+        model.addAttribute("tipo", tipo);
+        model.addAttribute("volverUrl", "/");
+        return "error";
+    }
+
+    // Para capturar excepciones en donde no se cumplan los constraints
+    @ExceptionHandler
+    public String handleConstraintException(ConstraintViolationException ex, Model model){
+        String mensajeUsuario = ex.getConstraintViolations()
+            .stream()
+            .map(ConstraintViolation::getMessage)    // obtiene "La edad debe ser mayor o igual a 18"
+            .findFirst()
+            .orElse("Error de validación");
+
+        String titulo = "Error en la operación";
+        String tipo = "warning";
 
         model.addAttribute("titulo", titulo);
         model.addAttribute("mensaje", mensajeUsuario);
