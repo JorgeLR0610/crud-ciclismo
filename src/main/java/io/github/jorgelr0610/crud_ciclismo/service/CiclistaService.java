@@ -21,10 +21,12 @@ public class CiclistaService {
         return ciclistaRepository.findAll();
     }
 
+    @SuppressWarnings("null")
     public Ciclista findById(Integer id){
         return ciclistaRepository.findById(id).orElseThrow(() -> new RuntimeException("Ciclista con ID: " + id + " no encontrado."));
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public Ciclista create(Ciclista ciclista){
         return ciclistaRepository.save(ciclista);
@@ -44,6 +46,7 @@ public class CiclistaService {
         return ciclistaRepository.save(actual);
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public void delete(Integer id){
         ciclistaRepository.deleteById(id);

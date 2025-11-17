@@ -21,10 +21,12 @@ public class ConcentradoService {
         return concentradoRepository.findAll();
     }
 
+    @SuppressWarnings("null")
     public Concentrado findById(Integer id){
         return concentradoRepository.findById(id).orElseThrow(() -> new RuntimeException("Concentrado con ID: " + id + " no encontrado."));
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public Concentrado create(Concentrado concentrado){
         return concentradoRepository.save(concentrado);
@@ -43,6 +45,7 @@ public class ConcentradoService {
         return concentradoRepository.save(actual);
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public void delete(Integer id){
         concentradoRepository.deleteById(id);

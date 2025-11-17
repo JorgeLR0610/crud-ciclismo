@@ -21,10 +21,12 @@ public class PuertoService {
         return puertoRepository.findAll();
     }
 
+    @SuppressWarnings("null")
     public Puerto findById(Integer id){
         return puertoRepository.findById(id).orElseThrow(() -> new RuntimeException("Puerto con ID: " + id + " no encontrado."));
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public Puerto create(Puerto puerto){
         return puertoRepository.save(puerto);
@@ -42,6 +44,7 @@ public class PuertoService {
         return puertoRepository.save(actual);
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public void delete(Integer id){
         puertoRepository.deleteById(id);

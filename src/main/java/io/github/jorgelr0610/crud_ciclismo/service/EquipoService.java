@@ -21,10 +21,12 @@ public class EquipoService {
         return equipoRepository.findAll();
     }
 
+    @SuppressWarnings("null")
     public Equipo findById(Integer id){
         return equipoRepository.findById(id).orElseThrow(() -> new RuntimeException("Equipo con ID: " + id + "no encontrado."));
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public Equipo create(Equipo equipo){
         return equipoRepository.save(equipo);
@@ -42,6 +44,7 @@ public class EquipoService {
         return equipoRepository.save(actual);
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public void delete(Integer id){
         equipoRepository.deleteById(id);

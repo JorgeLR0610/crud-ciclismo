@@ -21,10 +21,12 @@ public class MaillotService {
         return maillotRepository.findAll();
     }
 
+    @SuppressWarnings("null")
     public Maillot findById(Integer id){
         return maillotRepository.findById(id).orElseThrow(() -> new RuntimeException("Maillot con ID: " + id + " no encontrado."));
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public Maillot create(Maillot maillot){
         return maillotRepository.save(maillot);
@@ -42,6 +44,7 @@ public class MaillotService {
         return maillotRepository.save(actual);
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public void delete(Integer id){
         maillotRepository.deleteById(id);

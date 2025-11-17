@@ -21,10 +21,12 @@ public class EtapaService {
         return etapaRepository.findAll();
     }
 
+    @SuppressWarnings("null")
     public Etapa findById(Integer id){
         return etapaRepository.findById(id).orElseThrow(() -> new RuntimeException("Etapa con ID: " + id + " no encontrada."));
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public Etapa create(Etapa etapa){
         return etapaRepository.save(etapa);
@@ -43,6 +45,7 @@ public class EtapaService {
         return etapaRepository.save(actual);
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public void delete(Integer id){
         etapaRepository.deleteById(id);
