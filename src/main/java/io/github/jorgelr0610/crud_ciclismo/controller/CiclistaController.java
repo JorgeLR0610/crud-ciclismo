@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.github.jorgelr0610.crud_ciclismo.model.Ciclista;
 import io.github.jorgelr0610.crud_ciclismo.model.Equipo;
@@ -53,10 +54,12 @@ public class CiclistaController {
     }
 
     @PostMapping("/guardar")
-    public String createCiclista(@ModelAttribute("ciclista") Ciclista ciclista, @RequestParam("noEquipo") Integer equipoId){
+    public String createCiclista(@ModelAttribute("ciclista") Ciclista ciclista, @RequestParam("noEquipo") Integer equipoId, RedirectAttributes redirectAttributes){
         Equipo equipo = equipoService.findById(equipoId);
         ciclista.setNoEquipo(equipo);
         ciclistaService.create(ciclista);
+        redirectAttributes.addFlashAttribute("mensaje", "Ciclista creado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "success");
         return "redirect:/ciclistas";
     }
 
@@ -70,16 +73,20 @@ public class CiclistaController {
     }
 
     @PutMapping("/{id}") 
-    public String updateCiclista(@PathVariable Integer id, @ModelAttribute("ciclista") Ciclista ciclista, @RequestParam("noEquipo") Integer equipoId){
+    public String updateCiclista(@PathVariable Integer id, @ModelAttribute("ciclista") Ciclista ciclista, @RequestParam("noEquipo") Integer equipoId, RedirectAttributes redirectAttributes){
         Equipo equipo = equipoService.findById(equipoId);
         ciclista.setNoEquipo(equipo);
-        ciclistaService.update(id, ciclista); 
+        ciclistaService.update(id, ciclista);
+        redirectAttributes.addFlashAttribute("mensaje", "Ciclista actualizado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "info");
         return "redirect:/ciclistas";
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public String deleteCiclista(@PathVariable Integer id){
+    public String deleteCiclista(@PathVariable Integer id, RedirectAttributes redirectAttributes){
         ciclistaService.delete(id);
+        redirectAttributes.addFlashAttribute("mensaje", "Ciclista eliminado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "warning");
         return "redirect:/ciclistas";
     }
 

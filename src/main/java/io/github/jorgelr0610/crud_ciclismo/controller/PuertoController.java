@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.github.jorgelr0610.crud_ciclismo.model.Puerto;
 import io.github.jorgelr0610.crud_ciclismo.service.PuertoService;
@@ -47,8 +48,10 @@ public class PuertoController {
     }
 
     @PostMapping("/guardar")
-    public String createPuerto(@ModelAttribute("puerto") Puerto puerto){
+    public String createPuerto(@ModelAttribute("puerto") Puerto puerto, RedirectAttributes redirectAttributes){
         puertoService.create(puerto);
+        redirectAttributes.addFlashAttribute("mensaje", "Puerto creado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "success");
         return "redirect:/puertos";
     }
 
@@ -60,14 +63,18 @@ public class PuertoController {
     }
 
     @PutMapping("/{id}") 
-    public String updatePuerto(@PathVariable Integer id, @ModelAttribute("puerto") Puerto puerto){
-        puertoService.update(id, puerto); 
+    public String updatePuerto(@PathVariable Integer id, @ModelAttribute("puerto") Puerto puerto, RedirectAttributes redirectAttributes){
+        puertoService.update(id, puerto);
+        redirectAttributes.addFlashAttribute("mensaje", "Puerto actualizado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "info");
         return "redirect:/puertos";
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public String deletePuerto(@PathVariable Integer id){
+    public String deletePuerto(@PathVariable Integer id, RedirectAttributes redirectAttributes){
         puertoService.delete(id);
+        redirectAttributes.addFlashAttribute("mensaje", "Puerto eliminado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "warning");
         return "redirect:/puertos";
     }
 

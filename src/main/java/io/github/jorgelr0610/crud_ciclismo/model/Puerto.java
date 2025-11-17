@@ -6,6 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "Puertos")
@@ -16,12 +19,16 @@ public class Puerto {
     private int idPuerto;
 
     @Column(nullable = false, unique = true, length = 30)
+    @NotBlank(message = "El nombre del puerto es obligatorio")
+    @Size(min = 3, max = 30, message = "El nombre del puerto debe tener entre 3 y 30 caracteres")
     private String nombrePuerto;
 
     @Column(nullable = false, unique = false)
+    @Min(value = 1, message = "La altura debe ser mayor a 0")
     private int altura;
 
     @Column(nullable = false, unique = false)
+    @Min(value = 1, message = "La categoría debe ser mayor a 0")
     private int categoria;
 
     public Puerto() {

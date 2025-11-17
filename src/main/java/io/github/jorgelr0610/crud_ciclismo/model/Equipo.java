@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "Equipos")
@@ -16,6 +18,8 @@ public class Equipo {
     private int noEquipo;
 
     @Column(nullable =  false, unique = true, length = 30)
+    @NotBlank(message = "El nombre del equipo es obligatorio")
+    @Size(min = 3, max = 30, message = "El nombre debe tener entre 3 y 30 caracteres")
     private String nombreEquipo;
 
     @Column(nullable = false, unique = true, length = 50)

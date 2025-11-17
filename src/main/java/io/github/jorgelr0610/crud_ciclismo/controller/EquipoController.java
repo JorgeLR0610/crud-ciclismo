@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.github.jorgelr0610.crud_ciclismo.model.Equipo;
 import io.github.jorgelr0610.crud_ciclismo.service.EquipoService;
@@ -49,8 +50,10 @@ public class EquipoController {
     }
 
     @PostMapping("/guardar")
-    public String createEquipo(@ModelAttribute("equipo") Equipo equipo){
+    public String createEquipo(@ModelAttribute("equipo") Equipo equipo, RedirectAttributes redirectAttributes){
         equipoService.create(equipo);
+        redirectAttributes.addFlashAttribute("mensaje", "Equipo creado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "success");
         return "redirect:/equipos"; // "redirect:" es para enviar al usuario de vuelta a la lista y se evita un doble envío si se refresca la página
     }
 
@@ -64,14 +67,19 @@ public class EquipoController {
     }
 
     @PutMapping("/{id}") 
-    public String updateEquipo(@PathVariable Integer id, @ModelAttribute("equipo") Equipo equipo){
+    public String updateEquipo(@PathVariable Integer id, @ModelAttribute("equipo") Equipo equipo, RedirectAttributes redirectAttributes){
         equipoService.update(id, equipo); 
+        redirectAttributes.addFlashAttribute("mensaje", "Equipo actualizado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "info");
         return "redirect:/equipos";
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public String deleteEquipo(@PathVariable Integer id){
+    public String deleteEquipo(@PathVariable Integer id, RedirectAttributes redirectAttributes){
         equipoService.delete(id);
+        redirectAttributes.addFlashAttribute("mensaje", "Equipo eliminado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "warning");
+
         return "redirect:/equipos";
     }
 

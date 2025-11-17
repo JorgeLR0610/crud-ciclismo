@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Concentrado")
@@ -18,18 +19,22 @@ public class Concentrado {
     
     @ManyToOne
     @JoinColumn(name = "Dorsal")
+    @NotNull(message = "Debe seleccionar un ciclista")
     private Ciclista dorsal;
 
     @ManyToOne
     @JoinColumn(name = "No. de etapa")
+    @NotNull(message = "Debe seleccionar una etapa")
     private Etapa noEtapa;
 
     @ManyToOne
     @JoinColumn(name = "CodigoMaillot")
+    @NotNull(message = "Debe seleccionar un maillot")
     private Maillot codigo;
 
     @ManyToOne
     @JoinColumn(name = "ID del puerto")
+    @NotNull(message = "Debe seleccionar un puerto")
     private Puerto idPuerto;
 
     public Concentrado() {

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.github.jorgelr0610.crud_ciclismo.model.Etapa;
 import io.github.jorgelr0610.crud_ciclismo.service.EtapaService;
@@ -47,8 +48,10 @@ public class EtapaController {
     }
 
     @PostMapping("/guardar")
-    public String createEtapa(@ModelAttribute("etapa") Etapa etapa){
+    public String createEtapa(@ModelAttribute("etapa") Etapa etapa, RedirectAttributes redirectAttributes){
         etapaService.create(etapa);
+        redirectAttributes.addFlashAttribute("mensaje", "Etapa creada exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "success");
         return "redirect:/etapas";
     }
 
@@ -60,14 +63,18 @@ public class EtapaController {
     }
 
     @PutMapping("/{id}") 
-    public String updateEtapa(@PathVariable Integer id, @ModelAttribute("etapa") Etapa etapa){
-        etapaService.update(id, etapa); 
+    public String updateEtapa(@PathVariable Integer id, @ModelAttribute("etapa") Etapa etapa, RedirectAttributes redirectAttributes){
+        etapaService.update(id, etapa);
+        redirectAttributes.addFlashAttribute("mensaje", "Etapa actualizada exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "info");
         return "redirect:/etapas";
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public String deleteEtapa(@PathVariable Integer id){
+    public String deleteEtapa(@PathVariable Integer id, RedirectAttributes redirectAttributes){
         etapaService.delete(id);
+        redirectAttributes.addFlashAttribute("mensaje", "Etapa eliminada exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "warning");
         return "redirect:/etapas";
     }
 

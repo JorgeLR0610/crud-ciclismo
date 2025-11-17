@@ -8,6 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "Ciclistas")
@@ -18,19 +22,27 @@ public class Ciclista {
     private int dorsal;
 
     @Column(nullable = false, unique = false, length = 20)
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(min = 2, max = 20, message = "El nombre debe tener entre 2 y 20 caracteres")
     private String nombre;
 
     @Column(nullable = false, unique = false, length = 20)
+    @NotBlank(message = "El apellido paterno es obligatorio")
+    @Size(min = 2, max = 20, message = "El apellido paterno debe tener entre 2 y 20 caracteres")
     private String ap;
 
     @Column(nullable = false, unique = false, length = 20)
+    @NotBlank(message = "El apellido materno es obligatorio")
+    @Size(min = 2, max = 20, message = "El apellido materno debe tener entre 2 y 20 caracteres")
     private String am;
 
     @Column(nullable = false, unique = false)
+    @Min(value = 18, message = "La edad debe ser mayor o igual a 18")
     private int edad;
 
     @ManyToOne // Define la relación: Muchos Estudiantes para Una Carrera.
     @JoinColumn(name = "noEquipo") // (Opcional pero recomendado) Nombrar la columna FK en la tabla 'Ciclista'
+    @NotNull(message = "Debe seleccionar un equipo")
     private Equipo noEquipo; // El atributo es del TIPO de la otra entidad.
 
     public Ciclista() {

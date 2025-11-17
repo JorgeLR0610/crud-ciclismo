@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.github.jorgelr0610.crud_ciclismo.model.Ciclista;
 import io.github.jorgelr0610.crud_ciclismo.model.Concentrado;
@@ -76,7 +77,8 @@ public class ConcentradoController {
                                     @RequestParam("dorsal") Integer dorsalId,
                                     @RequestParam("noEtapa") Integer etapaId,
                                     @RequestParam("codigo") Integer maillotId,
-                                    @RequestParam("idPuerto") Integer puertoId){
+                                    @RequestParam("idPuerto") Integer puertoId,
+                                    RedirectAttributes redirectAttributes){
         Ciclista ciclista = ciclistaService.findById(dorsalId);
         Etapa etapa = etapaService.findById(etapaId);
         Maillot maillot = maillotService.findById(maillotId);
@@ -86,6 +88,8 @@ public class ConcentradoController {
         concentrado.setCodigo(maillot);
         concentrado.setIdPuerto(puerto);
         concentradoService.create(concentrado);
+        redirectAttributes.addFlashAttribute("mensaje", "Concentrado creado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "success");
         return "redirect:/concentrados";
     }
 
@@ -109,7 +113,8 @@ public class ConcentradoController {
                                     @RequestParam("dorsal") Integer dorsalId,
                                     @RequestParam("noEtapa") Integer etapaId,
                                     @RequestParam("codigo") Integer maillotId,
-                                    @RequestParam("idPuerto") Integer puertoId){
+                                    @RequestParam("idPuerto") Integer puertoId,
+                                    RedirectAttributes redirectAttributes){
         Ciclista ciclista = ciclistaService.findById(dorsalId);
         Etapa etapa = etapaService.findById(etapaId);
         Maillot maillot = maillotService.findById(maillotId);
@@ -118,13 +123,17 @@ public class ConcentradoController {
         concentrado.setNoEtapa(etapa);
         concentrado.setCodigo(maillot);
         concentrado.setIdPuerto(puerto);
-        concentradoService.update(id, concentrado); 
+        concentradoService.update(id, concentrado);
+        redirectAttributes.addFlashAttribute("mensaje", "Concentrado actualizado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "info");
         return "redirect:/concentrados";
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public String deleteConcentrado(@PathVariable Integer id){
+    public String deleteConcentrado(@PathVariable Integer id, RedirectAttributes redirectAttributes){
         concentradoService.delete(id);
+        redirectAttributes.addFlashAttribute("mensaje", "Concentrado eliminado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "warning");
         return "redirect:/concentrados";
     }
 

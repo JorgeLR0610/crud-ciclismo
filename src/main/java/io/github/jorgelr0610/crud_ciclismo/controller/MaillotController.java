@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import io.github.jorgelr0610.crud_ciclismo.model.Maillot;
 import io.github.jorgelr0610.crud_ciclismo.service.MaillotService;
@@ -47,8 +48,10 @@ public class MaillotController {
     }
 
     @PostMapping("/guardar")
-    public String createMaillot(@ModelAttribute("maillot") Maillot maillot){
+    public String createMaillot(@ModelAttribute("maillot") Maillot maillot, RedirectAttributes redirectAttributes){
         maillotService.create(maillot);
+        redirectAttributes.addFlashAttribute("mensaje", "Maillot creado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "success");
         return "redirect:/maillots";
     }
 
@@ -60,14 +63,18 @@ public class MaillotController {
     }
 
     @PutMapping("/{id}") 
-    public String updateMaillot(@PathVariable Integer id, @ModelAttribute("maillot") Maillot maillot){
-        maillotService.update(id, maillot); 
+    public String updateMaillot(@PathVariable Integer id, @ModelAttribute("maillot") Maillot maillot, RedirectAttributes redirectAttributes){
+        maillotService.update(id, maillot);
+        redirectAttributes.addFlashAttribute("mensaje", "Maillot actualizado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "info");
         return "redirect:/maillots";
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public String deleteMaillot(@PathVariable Integer id){
+    public String deleteMaillot(@PathVariable Integer id, RedirectAttributes redirectAttributes){
         maillotService.delete(id);
+        redirectAttributes.addFlashAttribute("mensaje", "Maillot eliminado exitosamente");
+        redirectAttributes.addFlashAttribute("tipo", "warning");
         return "redirect:/maillots";
     }
 

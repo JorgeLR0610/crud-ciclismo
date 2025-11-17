@@ -9,6 +9,12 @@
 <div class="container">
     <h1>Maillots</h1>
 
+    <div th:if="${mensaje}" 
+     th:class="'alert alert-' + ${tipo} + ' alert-dismissible fade show'" 
+     role="alert">
+    <span th:text="${mensaje}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
 
     <div class="d-flex mb-3">
         <a th:href="@{/maillots/nuevo}" class="btn btn-primary">Añadir Nuevo Maillot</a>
@@ -68,7 +74,7 @@
         </tbody>
     </table>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 
