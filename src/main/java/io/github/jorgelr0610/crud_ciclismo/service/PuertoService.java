@@ -46,5 +46,46 @@ public class PuertoService {
     public void delete(Integer id){
         puertoRepository.deleteById(id);
     }
+
+    // Método para buscar en función del campo que se seleccione
+    public List<Puerto> search(String campo, String query) {
+        switch (campo) {
+            case "nombrePuerto":
+                return puertoRepository.findByNombrePuertoContaining(query);
+            
+            case "idPuerto":
+                try {
+                    int id = Integer.parseInt(query);
+                    return puertoRepository.findById(id)
+                                .map(puerto -> List.of(puerto))
+                                .orElse(List.of());
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+            
+            case "altura":
+                try {
+                    int altura = Integer.parseInt(query);
+                    return puertoRepository.findAll().stream()
+                                .filter(p -> p.getAltura() == altura)
+                                .toList();
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+            
+            case "categoria":
+                try {
+                    int categoria = Integer.parseInt(query);
+                    return puertoRepository.findAll().stream()
+                                .filter(p -> p.getCategoria() == categoria)
+                                .toList();
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+                
+            default:
+                return List.of();
+        }
+    }
 }
 

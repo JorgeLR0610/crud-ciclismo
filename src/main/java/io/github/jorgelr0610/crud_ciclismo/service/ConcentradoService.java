@@ -47,5 +47,63 @@ public class ConcentradoService {
     public void delete(Integer id){
         concentradoRepository.deleteById(id);
     }
+
+    // Método para buscar en función del campo que se seleccione
+    public List<Concentrado> search(String campo, String query) {
+        switch (campo) {
+            case "idConcentrado":
+                try {
+                    int id = Integer.parseInt(query);
+                    return concentradoRepository.findById(id)
+                                .map(concentrado -> List.of(concentrado))
+                                .orElse(List.of());
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+            
+            case "dorsal":
+                try {
+                    int dorsal = Integer.parseInt(query);
+                    return concentradoRepository.findAll().stream()
+                                .filter(c -> c.getDorsal() != null && c.getDorsal().getDorsal() == dorsal)
+                                .toList();
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+            
+            case "noEtapa":
+                try {
+                    int noEtapa = Integer.parseInt(query);
+                    return concentradoRepository.findAll().stream()
+                                .filter(c -> c.getNoEtapa() != null && c.getNoEtapa().getNoEtapa() == noEtapa)
+                                .toList();
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+            
+            case "codigo":
+                try {
+                    int codigo = Integer.parseInt(query);
+                    return concentradoRepository.findAll().stream()
+                                .filter(c -> c.getCodigo() != null && c.getCodigo().getCodigo() == codigo)
+                                .toList();
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+            
+            case "idPuerto":
+                try {
+                    int idPuerto = Integer.parseInt(query);
+                    return concentradoRepository.findAll().stream()
+                                .filter(c -> c.getIdPuerto() != null && c.getIdPuerto().getIdPuerto() == idPuerto)
+                                .toList();
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+                
+            default:
+                return List.of();
+        }
+    }
 }
 

@@ -9,7 +9,30 @@
 <div class="container">
     <h1>Etapas</h1>
 
-    <a th:href="@{/etapas/nuevo}" class="btn btn-primary mb-3">Añadir Nueva Etapa</a>
+    <div class="d-flex mb-3">
+        <a th:href="@{/etapas/nuevo}" class="btn btn-primary">Añadir Nueva Etapa</a>
+        <a th:href="@{/}" class="btn btn-outline-secondary ms-auto">Volver al menú principal</a>
+    </div>
+
+    <form th:action="@{/etapas}" method="get" class="d-flex align-items-center mb-3 p-3 bg-light rounded">
+        
+        <label for="campo" class="form-label me-2 mb-0">Buscar por:</label>
+        
+        <select name="campo" class="form-select me-2" style="width: 200px;">
+            <option value="salida">Salida</option>
+            <option value="llegada">Llegada</option>
+            <option value="pais">País</option>
+            <option value="noEtapa">No. de Etapa</option>
+            <option value="km">Kilómetros</option>
+        </select>
+
+        <input type="text" name="query" class="form-control me-2" placeholder="Escribe tu búsqueda..." />
+
+        <button type="submit" class="btn btn-secondary me-2">Buscar</button>
+        
+        <a th:href="@{/etapas}" class="btn btn-light">Limpiar</a>
+    
+    </form>
 
     <table class="table">
         <thead class="table-dark">

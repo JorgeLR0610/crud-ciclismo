@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import io.github.jorgelr0610.crud_ciclismo.model.Puerto;
 import io.github.jorgelr0610.crud_ciclismo.service.PuertoService;
@@ -26,8 +27,14 @@ public class PuertoController {
     }
 
     @GetMapping
-    public String listPuertos(Model model){
-        List<Puerto> puertos = puertoService.findAll();
+    public String listPuertos(Model model, @RequestParam(required = false) String campo, @RequestParam(required = false) String query){
+        List<Puerto> puertos;
+
+        if (campo != null && query != null && !query.isEmpty()){
+            puertos = puertoService.search(campo, query);
+        } else{
+            puertos = puertoService.findAll();
+        }
         model.addAttribute("listaDePuertos", puertos);
         return "puertos/list";
     }

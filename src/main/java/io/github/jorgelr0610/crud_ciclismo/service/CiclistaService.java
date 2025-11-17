@@ -48,5 +48,42 @@ public class CiclistaService {
     public void delete(Integer id){
         ciclistaRepository.deleteById(id);
     }
+
+    // Método para buscar en función del campo que se seleccione
+    public List<Ciclista> search(String campo, String query) {
+        switch (campo) {
+            case "nombre":
+                return ciclistaRepository.findByNombreContaining(query);
+            
+            case "ap":
+                return ciclistaRepository.findByApContaining(query);
+            
+            case "am":
+                return ciclistaRepository.findByAmContaining(query);
+            
+            case "dorsal":
+                try {
+                    int id = Integer.parseInt(query);
+                    return ciclistaRepository.findById(id)
+                                .map(ciclista -> List.of(ciclista))
+                                .orElse(List.of());
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+            
+            case "edad":
+                try {
+                    int edad = Integer.parseInt(query);
+                    return ciclistaRepository.findAll().stream()
+                                .filter(c -> c.getEdad() == edad)
+                                .toList();
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+                
+            default:
+                return List.of();
+        }
+    }
 }
 

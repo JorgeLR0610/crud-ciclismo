@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import io.github.jorgelr0610.crud_ciclismo.model.Etapa;
 import io.github.jorgelr0610.crud_ciclismo.service.EtapaService;
@@ -26,8 +27,14 @@ public class EtapaController {
     }
 
     @GetMapping
-    public String listEtapas(Model model){
-        List<Etapa> etapas = etapaService.findAll();
+    public String listEtapas(Model model, @RequestParam(required = false) String campo, @RequestParam(required = false) String query){
+        List<Etapa> etapas;
+
+        if (campo != null && query != null && !query.isEmpty()){
+            etapas = etapaService.search(campo, query);
+        } else{
+            etapas = etapaService.findAll();
+        }
         model.addAttribute("listaDeEtapas", etapas);
         return "etapas/list";
     }

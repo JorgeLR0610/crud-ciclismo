@@ -46,5 +46,39 @@ public class MaillotService {
     public void delete(Integer id){
         maillotRepository.deleteById(id);
     }
+
+    // Método para buscar en función del campo que se seleccione
+    public List<Maillot> search(String campo, String query) {
+        switch (campo) {
+            case "tipo":
+                return maillotRepository.findByTipoContaining(query);
+            
+            case "color":
+                return maillotRepository.findByColorContaining(query);
+            
+            case "codigo":
+                try {
+                    int id = Integer.parseInt(query);
+                    return maillotRepository.findById(id)
+                                .map(maillot -> List.of(maillot))
+                                .orElse(List.of());
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+            
+            case "premio":
+                try {
+                    int premio = Integer.parseInt(query);
+                    return maillotRepository.findAll().stream()
+                                .filter(m -> m.getPremio() == premio)
+                                .toList();
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+                
+            default:
+                return List.of();
+        }
+    }
 }
 

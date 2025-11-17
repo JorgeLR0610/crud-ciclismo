@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import io.github.jorgelr0610.crud_ciclismo.model.Maillot;
 import io.github.jorgelr0610.crud_ciclismo.service.MaillotService;
@@ -26,8 +27,14 @@ public class MaillotController {
     }
 
     @GetMapping
-    public String listMaillots(Model model){
-        List<Maillot> maillots = maillotService.findAll();
+    public String listMaillots(Model model, @RequestParam(required = false) String campo, @RequestParam(required = false) String query){
+        List<Maillot> maillots;
+
+        if (campo != null && query != null && !query.isEmpty()){
+            maillots = maillotService.search(campo, query);
+        } else{
+            maillots = maillotService.findAll();
+        }
         model.addAttribute("listaDeMaillots", maillots);
         return "maillots/list";
     }

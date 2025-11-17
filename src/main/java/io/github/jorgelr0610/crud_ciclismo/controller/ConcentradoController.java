@@ -44,8 +44,14 @@ public class ConcentradoController {
     }
 
     @GetMapping
-    public String listConcentrados(Model model){
-        List<Concentrado> concentrados = concentradoService.findAll();
+    public String listConcentrados(Model model, @RequestParam(required = false) String campo, @RequestParam(required = false) String query){
+        List<Concentrado> concentrados;
+
+        if (campo != null && query != null && !query.isEmpty()){
+            concentrados = concentradoService.search(campo, query);
+        } else{
+            concentrados = concentradoService.findAll();
+        }
         model.addAttribute("listaDeConcentrados", concentrados);
         return "concentrados/list";
     }

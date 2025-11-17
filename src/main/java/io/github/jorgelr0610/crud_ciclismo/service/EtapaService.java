@@ -47,5 +47,42 @@ public class EtapaService {
     public void delete(Integer id){
         etapaRepository.deleteById(id);
     }
+
+    // Método para buscar en función del campo que se seleccione
+    public List<Etapa> search(String campo, String query) {
+        switch (campo) {
+            case "salida":
+                return etapaRepository.findBySalidaContaining(query);
+            
+            case "llegada":
+                return etapaRepository.findByLlegadaContaining(query);
+            
+            case "pais":
+                return etapaRepository.findByPaisContaining(query);
+            
+            case "noEtapa":
+                try {
+                    int id = Integer.parseInt(query);
+                    return etapaRepository.findById(id)
+                                .map(etapa -> List.of(etapa))
+                                .orElse(List.of());
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+            
+            case "km":
+                try {
+                    int km = Integer.parseInt(query);
+                    return etapaRepository.findAll().stream()
+                                .filter(e -> e.getKm() == km)
+                                .toList();
+                } catch (NumberFormatException e) {
+                    return List.of();
+                }
+                
+            default:
+                return List.of();
+        }
+    }
 }
 

@@ -9,7 +9,30 @@
 <div class="container">
     <h1>Maillots</h1>
 
-    <a th:href="@{/maillots/nuevo}" class="btn btn-primary mb-3">Añadir Nuevo Maillot</a>
+
+    <div class="d-flex mb-3">
+        <a th:href="@{/maillots/nuevo}" class="btn btn-primary">Añadir Nuevo Maillot</a>
+        <a th:href="@{/}" class="btn btn-outline-secondary ms-auto">Volver al menú principal</a>
+    </div>
+
+    <form th:action="@{/maillots}" method="get" class="d-flex align-items-center mb-3 p-3 bg-light rounded">
+        
+        <label for="campo" class="form-label me-2 mb-0">Buscar por:</label>
+        
+        <select name="campo" class="form-select me-2" style="width: 200px;">
+            <option value="tipo">Tipo</option>
+            <option value="color">Color</option>
+            <option value="codigo">Código</option>
+            <option value="premio">Premio</option>
+        </select>
+
+        <input type="text" name="query" class="form-control me-2" placeholder="Escribe tu búsqueda..." />
+
+        <button type="submit" class="btn btn-secondary me-2">Buscar</button>
+        
+        <a th:href="@{/maillots}" class="btn btn-light">Limpiar</a>
+    
+    </form>
 
     <table class="table">
         <thead class="table-dark">

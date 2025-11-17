@@ -31,8 +31,14 @@ public class CiclistaController {
     }
 
     @GetMapping
-    public String listCiclistas(Model model){
-        List<Ciclista> ciclistas = ciclistaService.findAll();
+    public String listCiclistas(Model model, @RequestParam(required = false) String campo, @RequestParam(required = false) String query){
+        List<Ciclista> ciclistas;
+
+        if (campo != null && query != null && !query.isEmpty()){
+            ciclistas = ciclistaService.search(campo, query);
+        } else{
+            ciclistas = ciclistaService.findAll();
+        }
         model.addAttribute("listaDeCiclistas", ciclistas);
         return "ciclistas/list";
     }

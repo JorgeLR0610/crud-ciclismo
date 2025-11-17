@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import io.github.jorgelr0610.crud_ciclismo.model.Equipo;
 import io.github.jorgelr0610.crud_ciclismo.service.EquipoService;
@@ -25,10 +26,16 @@ public class EquipoController {
         this.equipoService = equipoService; //Constructor injection
     }
 
-    //Para listar todos los registros de la tabla una vez que se entre a esta ruta
+    //Para listar todos los registros de la tabla una vez que se entre a esta ruta, o según los filtros de búsqueda
     @GetMapping //Este método responde a la ruta raíz dentro de /equipos
-    public String listEquipos(Model model){
-        List<Equipo> equipos = equipoService.findAll(); //Obtiene los datos del servicio
+    public String listEquipos(Model model, @RequestParam(required = false) String campo, @RequestParam(required = false) String query){ //Los parámetros son opcionales
+        List<Equipo> equipos;
+
+        if (campo != null && query != null && !query.isEmpty()){
+            equipos = equipoService.search(campo, query);
+        } else{
+            equipos = equipoService.findAll();
+        }
         model.addAttribute("listaDeEquipos", equipos); //Pasa los datos a la vista
         return "equipos/list"; // devuelve el nombre del archivo html sin la extensión (templates/equipos/list.html)
     }
