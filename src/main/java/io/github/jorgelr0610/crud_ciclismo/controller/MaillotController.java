@@ -17,23 +17,28 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import io.github.jorgelr0610.crud_ciclismo.model.Maillot;
 import io.github.jorgelr0610.crud_ciclismo.service.MaillotService;
 
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.dao.DataIntegrityViolationException;
+
 @Controller
 @RequestMapping("/maillots")
 public class MaillotController {
 
     private final MaillotService maillotService;
 
-    public MaillotController(MaillotService maillotService){
+    public MaillotController(MaillotService maillotService) {
         this.maillotService = maillotService;
     }
 
     @GetMapping
-    public String listMaillots(Model model, @RequestParam(required = false) String campo, @RequestParam(required = false) String query){
+    public String listMaillots(Model model, @RequestParam(required = false) String campo,
+            @RequestParam(required = false) String query) {
         List<Maillot> maillots;
 
-        if (campo != null && query != null && !query.isEmpty()){
+        if (campo != null && query != null && !query.isEmpty()) {
             maillots = maillotService.search(campo, query);
-        } else{
+        } else {
             maillots = maillotService.findAll();
         }
         model.addAttribute("listaDeMaillots", maillots);
@@ -41,37 +46,57 @@ public class MaillotController {
     }
 
     @GetMapping("/nuevo")
-    public String createForm(Model model){
+    public String createForm(Model model) {
         Maillot maillot = new Maillot();
         model.addAttribute("maillot", maillot);
         return "maillots/form";
     }
 
     @PostMapping("/guardar")
-    public String createMaillot(@ModelAttribute("maillot") Maillot maillot, RedirectAttributes redirectAttributes){
-        maillotService.create(maillot);
-        redirectAttributes.addFlashAttribute("mensaje", "Maillot creado exitosamente");
-        redirectAttributes.addFlashAttribute("tipo", "success");
-        return "redirect:/maillots";
+    public String createMaillot(@Valid @ModelAttribute("maillot") Maillot maillot, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "maillots/form";
+        }
+
+        try {
+            maillotService.create(maillot);
+            redirectAttributes.addFlashAttribute("mensaje", "Maillot creado exitosamente");
+            redirectAttributes.addFlashAttribute("tipo", "success");
+            return "redirect:/maillots";
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("error", "Ya existe un maillot con ese tipo o color.");
+            return "maillots/form";
+        }
     }
 
     @GetMapping("/editar/{id}")
-    public String updateMaillotForm(@PathVariable Integer id, Model model){
+    public String updateMaillotForm(@PathVariable Integer id, Model model) {
         Maillot maillot = maillotService.findById(id);
         model.addAttribute("maillot", maillot);
         return "maillots/form";
     }
 
-    @PutMapping("/{id}") 
-    public String updateMaillot(@PathVariable Integer id, @ModelAttribute("maillot") Maillot maillot, RedirectAttributes redirectAttributes){
-        maillotService.update(id, maillot);
-        redirectAttributes.addFlashAttribute("mensaje", "Maillot actualizado exitosamente");
-        redirectAttributes.addFlashAttribute("tipo", "info");
-        return "redirect:/maillots";
+    @PutMapping("/{id}")
+    public String updateMaillot(@PathVariable Integer id, @Valid @ModelAttribute("maillot") Maillot maillot,
+            BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "maillots/form";
+        }
+
+        try {
+            maillotService.update(id, maillot);
+            redirectAttributes.addFlashAttribute("mensaje", "Maillot actualizado exitosamente");
+            redirectAttributes.addFlashAttribute("tipo", "info");
+            return "redirect:/maillots";
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute("error", "Ya existe un maillot con ese tipo o color.");
+            return "maillots/form";
+        }
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public String deleteMaillot(@PathVariable Integer id, RedirectAttributes redirectAttributes){
+    public String deleteMaillot(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         maillotService.delete(id);
         redirectAttributes.addFlashAttribute("mensaje", "Maillot eliminado exitosamente");
         redirectAttributes.addFlashAttribute("tipo", "warning");
@@ -79,4 +104,3 @@ public class MaillotController {
     }
 
 }
-

@@ -19,6 +19,9 @@ import io.github.jorgelr0610.crud_ciclismo.model.Equipo;
 import io.github.jorgelr0610.crud_ciclismo.service.CiclistaService;
 import io.github.jorgelr0610.crud_ciclismo.service.EquipoService;
 
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+
 @Controller
 @RequestMapping("/ciclistas")
 public class CiclistaController {
@@ -26,18 +29,20 @@ public class CiclistaController {
     private final CiclistaService ciclistaService;
     private final EquipoService equipoService;
 
-    public CiclistaController(CiclistaService ciclistaService, EquipoService equipoService){
+    public CiclistaController(CiclistaService ciclistaService, EquipoService equipoService) {
         this.ciclistaService = ciclistaService;
         this.equipoService = equipoService;
     }
 
     @GetMapping
-    public String listCiclistas(Model model, @RequestParam(required = false) String campo, @RequestParam(required = false) String query){
+    public String listCiclistas(Model model, @RequestParam(required = false) String campo,
+            @RequestParam(required = false) String query) {
         List<Ciclista> ciclistas;
 
-        if (campo != null && query != null && !query.isEmpty()){
+        if (campo != null && query != null && !query.isEmpty()) {
+            ciclistaService.search(campo, query);
             ciclistas = ciclistaService.search(campo, query);
-        } else{
+        } else {
             ciclistas = ciclistaService.findAll();
         }
         model.addAttribute("listaDeCiclistas", ciclistas);
@@ -45,7 +50,7 @@ public class CiclistaController {
     }
 
     @GetMapping("/nuevo")
-    public String createForm(Model model){
+    public String createForm(Model model) {
         Ciclista ciclista = new Ciclista();
         List<Equipo> equipos = equipoService.findAll();
         model.addAttribute("ciclista", ciclista);
@@ -54,7 +59,14 @@ public class CiclistaController {
     }
 
     @PostMapping("/guardar")
-    public String createCiclista(@ModelAttribute("ciclista") Ciclista ciclista, @RequestParam("noEquipo") Integer equipoId, RedirectAttributes redirectAttributes){
+    public String createCiclista(@Valid @ModelAttribute("ciclista") Ciclista ciclista, BindingResult bindingResult,
+            @RequestParam("noEquipo") Integer equipoId, RedirectAttributes redirectAttributes, Model model) {
+        if (bindingResult.hasErrors()) {
+            List<Equipo> equipos = equipoService.findAll();
+            model.addAttribute("equipos", equipos);
+            return "ciclistas/form";
+        }
+
         Equipo equipo = equipoService.findById(equipoId);
         ciclista.setNoEquipo(equipo);
         ciclistaService.create(ciclista);
@@ -64,7 +76,7 @@ public class CiclistaController {
     }
 
     @GetMapping("/editar/{id}")
-    public String updateCiclistaForm(@PathVariable Integer id, Model model){
+    public String updateCiclistaForm(@PathVariable Integer id, Model model) {
         Ciclista ciclista = ciclistaService.findById(id);
         List<Equipo> equipos = equipoService.findAll();
         model.addAttribute("ciclista", ciclista);
@@ -72,8 +84,16 @@ public class CiclistaController {
         return "ciclistas/form";
     }
 
-    @PutMapping("/{id}") 
-    public String updateCiclista(@PathVariable Integer id, @ModelAttribute("ciclista") Ciclista ciclista, @RequestParam("noEquipo") Integer equipoId, RedirectAttributes redirectAttributes){
+    @PutMapping("/{id}")
+    public String updateCiclista(@PathVariable Integer id, @Valid @ModelAttribute("ciclista") Ciclista ciclista,
+            BindingResult bindingResult, @RequestParam("noEquipo") Integer equipoId,
+            RedirectAttributes redirectAttributes, Model model) {
+        if (bindingResult.hasErrors()) {
+            List<Equipo> equipos = equipoService.findAll();
+            model.addAttribute("equipos", equipos);
+            return "ciclistas/form";
+        }
+
         Equipo equipo = equipoService.findById(equipoId);
         ciclista.setNoEquipo(equipo);
         ciclistaService.update(id, ciclista);
@@ -83,7 +103,7 @@ public class CiclistaController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public String deleteCiclista(@PathVariable Integer id, RedirectAttributes redirectAttributes){
+    public String deleteCiclista(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         ciclistaService.delete(id);
         redirectAttributes.addFlashAttribute("mensaje", "Ciclista eliminado exitosamente");
         redirectAttributes.addFlashAttribute("tipo", "warning");
@@ -91,4 +111,3 @@ public class CiclistaController {
     }
 
 }
-

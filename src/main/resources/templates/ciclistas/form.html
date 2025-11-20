@@ -1,67 +1,83 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Formulario de Ciclista</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-6 col-md-8 mx-auto">
-            <h1 class="mt-3" th:text="${ciclista.dorsal == 0} ? 'Crear Ciclista' : 'Editar Ciclista'">
-                Formulario de Ciclista
-            </h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="mt-3" th:text="${ciclista.dorsal == 0} ? 'Crear Ciclista' : 'Editar Ciclista'">
+                    Formulario de Ciclista
+                </h1>
 
-            <form th:action="${ciclista.dorsal == 0} ? @{/ciclistas/guardar} : @{/ciclistas/{id}(id=${ciclista.dorsal})}" 
-                  th:object="${ciclista}" 
-                  method="post">
-                
-                <input type="hidden" name="_method" value="PUT" th:if="${ciclista.dorsal != 0}" />
-                <input type="hidden" th:field="*{dorsal}" />
-                
-                <div class="mb-3">
-                    <label for="nombre" class="form-label">Nombre:</label>
-                    <input type="text" th:field="*{nombre}" class="form-control" required />
-                </div>
-                
-                <div class="mb-3">
-                    <label for="ap" class="form-label">Apellido Paterno:</label>
-                    <input type="text" th:field="*{ap}" class="form-control" required />
-                </div>
+                <form
+                    th:action="${ciclista.dorsal == 0} ? @{/ciclistas/guardar} : @{/ciclistas/{id}(id=${ciclista.dorsal})}"
+                    th:object="${ciclista}" method="post">
 
-                <div class="mb-3">
-                    <label for="am" class="form-label">Apellido Materno:</label>
-                    <input type="text" th:field="*{am}" class="form-control" required />
-                </div>
+                    <input type="hidden" name="_method" value="PUT" th:if="${ciclista.dorsal != 0}" />
+                    <input type="hidden" th:field="*{dorsal}" />
 
-                <div class="mb-3">
-                    <label for="edad" class="form-label">Edad:</label>
-                    <input type="number" th:field="*{edad}" class="form-control" required />
-                </div>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre:</label>
+                        <input type="text" th:field="*{nombre}" class="form-control"
+                            th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid' : ''" required />
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">Error
+                            en el nombre</div>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="noEquipo" class="form-label">Equipo:</label>
-                    <select name="noEquipo" class="form-select" required>
-                        <option value="">Seleccione un equipo</option>
-                        <option th:each="equipo : ${equipos}" 
-                                th:value="${equipo.noEquipo}" 
+                    <div class="mb-3">
+                        <label for="ap" class="form-label">Apellido Paterno:</label>
+                        <input type="text" th:field="*{ap}" class="form-control"
+                            th:classappend="${#fields.hasErrors('ap')} ? 'is-invalid' : ''" required />
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('ap')}" th:errors="*{ap}">Error en el
+                            apellido paterno</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="am" class="form-label">Apellido Materno:</label>
+                        <input type="text" th:field="*{am}" class="form-control"
+                            th:classappend="${#fields.hasErrors('am')} ? 'is-invalid' : ''" required />
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('am')}" th:errors="*{am}">Error en el
+                            apellido materno</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edad" class="form-label">Edad:</label>
+                        <input type="number" th:field="*{edad}" class="form-control"
+                            th:classappend="${#fields.hasErrors('edad')} ? 'is-invalid' : ''" required />
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('edad')}" th:errors="*{edad}">Error en
+                            la edad</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="noEquipo" class="form-label">Equipo:</label>
+                        <select name="noEquipo" class="form-select"
+                            th:classappend="${#fields.hasErrors('noEquipo')} ? 'is-invalid' : ''" required>
+                            <option value="">Seleccione un equipo</option>
+                            <option th:each="equipo : ${equipos}" th:value="${equipo.noEquipo}"
                                 th:text="${equipo.nombreEquipo}"
                                 th:selected="${ciclista.noEquipo != null && ciclista.noEquipo.noEquipo == equipo.noEquipo}">
-                            Equipo
-                        </option>
-                    </select>
-                </div>
+                                Equipo
+                            </option>
+                        </select>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('noEquipo')}" th:errors="*{noEquipo}">
+                            Error en el equipo</div>
+                    </div>
 
-                <button type="submit" class="btn btn-primary">
-                    <span th:text="${ciclista.dorsal == 0} ? 'Guardar' : 'Actualizar'">Guardar</span>
-                </button>
-                <a th:href="@{/ciclistas}" class="btn btn-secondary">Cancelar</a>
-            </form>
+                    <button type="submit" class="btn btn-primary">
+                        <span th:text="${ciclista.dorsal == 0} ? 'Guardar' : 'Actualizar'">Guardar</span>
+                    </button>
+                    <a th:href="@{/ciclistas}" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 </body>
-</html>
 
+</html>
