@@ -11,7 +11,7 @@ import jakarta.validation.ConstraintViolationException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     
-    // Captura cuando no se encuentra un registro
+    // Para algún error no manejado
     @ExceptionHandler(RuntimeException.class)
     public String handleNotFound(RuntimeException ex, Model model) {
         model.addAttribute("titulo", "Error");
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
             titulo = "Uno de los campos está duplicado";
             tipo = "warning";
         }        
-        // Detectar violación de FOREIGN KEY constraint
+        // Detectar violación de FK constraint
         else if (errorMessage.contains("foreign key constraint") || 
                  errorMessage.contains("Cannot delete or update a parent row")) {
             titulo = "El registro no se puede eliminar porque tiene relación con otros datos.";
@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
     public String handleConstraintException(ConstraintViolationException ex, Model model){
         String mensajeUsuario = ex.getConstraintViolations()
             .stream()
-            .map(ConstraintViolation::getMessage)    // obtiene "La edad debe ser mayor o igual a 18"
+            .map(ConstraintViolation::getMessage)    // Obtiene el error definido en el constraint de la clase en model
             .findFirst()
             .orElse("Error de validación");
 
